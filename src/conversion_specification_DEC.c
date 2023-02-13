@@ -25,38 +25,28 @@
 // 0x1.b6e624p+16 0x表示16进制输出，p+16表示乘以2^16
 // 1.123581e+05 科学计数法输出，e+05表示乘以10^5
 int test_for_p_and_e();
-
-
 // 使用转换说明
 int printout();
-
 //Conversion Specification的修饰符
 // %d 这样的内容被称为格式化字符串的转换说明，这些转换说明中还能够插入额外的修饰符
 // 下面的函数就是对这些修饰符的示范
 int conversion_specification();
-
-
 // 这是一个练习
 int exercise();
-
 // 关于转换说明的根本机制解释
 int intconv();
-
-
 // 一个简单的二进制数转换,将64位以下的十进制正整数转化为二进制形式
 // 下一步希望以字符串形式输出
 char *bintransfer(int num);
-
-
 // 正整数指数幂计算器
 int power(int num, int power);
-
-
 // 将一个字符串逆序输出.
 // 这个函数还没有完成
 char *str_reverse(char *input_str);
-
-
+// 打印ASCII对应表
+int print_ASCII();
+// 打印一个转换表。这个函数说明\\形式的转义字符就是将整数强制以字符串类型输出
+int print_transfer();
 
 
 int main(int argc, char const *argv[])
@@ -65,9 +55,22 @@ int main(int argc, char const *argv[])
     // conversion_specification();
     // exercise();
 
-    intconv();
 
-       
+    // char *ppp[] = {
+    //     "asc", "baf", "hfj",
+    //     "dsm", "fre", "dwf",
+    //     "en", "mq", "bhq",
+    //     "wrnqjebuhwnjwdkiweiqbrhfefnewijdeqwfrenibhrwvfrmdwej",
+    //     "ewkrfebuqvfjdnwibwqjekngbheijknwsdqhefbhwdnkwj"
+    // };
+
+    // int count_ppp = 11;
+    // int i = 0;
+    // for(i = 0; i < count_ppp; i++){
+    //     printf(">> %s // %s << \n",str_reverse(ppp[i]), ppp[i]);
+    // }
+
+    printf("< %22.2e >|< %22.2f >\n", 1201.0, 1201.0);
 
     return 0;
 }
@@ -230,10 +233,20 @@ char *bintransfer(int num){
 
 
 char *str_reverse(char *input_str){
-    char res[64];
-    int _strlen = strlen(input_str);
 
-    return "Unifishede Function";
+    /* warning: function returns address of local variable [-Wreturn-local-addr]*/
+    
+    int str_len = strlen(input_str);
+    char rev_str[str_len + 1];
+    rev_str[str_len] = '0';
+
+    
+    short i = 0;
+    for(i = 0; i < str_len; i++){
+        rev_str[i] = input_str[str_len - i - 1];
+    }
+
+    return rev_str;
 }
 
 
@@ -247,4 +260,42 @@ int power(int num, int power){
     }
 
     return res;
+}
+
+
+
+int print_ASCII(){
+
+    int i = 33;
+    int end = 127;
+
+    for(i = 33; i < end; i++){
+        printf("%d-%c\t", i, i);
+        if(i % 6 == 0){
+            printf("\n");
+        }
+    }
+    printf("\n");
+    
+
+    return 0;
+}
+
+
+
+int print_transfer(){
+
+    int i = 1;
+    int end = 127;
+
+    for(i = 1; i < end; i++){
+        printf("\\%d-%c\t", i, i);
+        if(i % 6 == 0){
+            printf("\n");
+        }
+    }
+    printf("\n");
+    
+
+    return 0;
 }
