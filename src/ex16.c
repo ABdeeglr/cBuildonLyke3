@@ -1,8 +1,8 @@
 // Exercise 16: Structs and Pointers to Them
 #include <stdio.h>
+#include <string.h>
 #include <assert.h>
 #include <stdlib.h>
-#include <string.h>
 
 
 struct Person {
@@ -42,16 +42,25 @@ void Person_print(struct Person *who){
 }
 
 
+char *getname(){
+    char *name = "Test it";
+
+    return strdup(name);
+}
+
 int main(int argc, char const *argv[]){
 
     struct Person *joe = Person_create(
         "Joe Alex", 32, 64, 140);
 
     struct Person *frank = Person_create(
-        "Frank Blank", 20, 72, 180);
+        "Frank Mini", 20, 50, 150);
 
-    printf("Joe is at mermory location %p: \n", joe);
-    printf("Frank is at mermory location %p: \n", frank);
+    printf("Joe is at mermory location %p: Size: %lu\n", joe, sizeof(joe));
+    Person_print(joe);
+    printf("Frank is at mermory location %p: Size: %lu\n", frank, sizeof(frank));
+    Person_print(frank);
+    // printf("Size of struct Person: %lu\n", sizeof(struct Person));
 
     joe->age += 20;
     joe->height -= 2;
@@ -64,6 +73,12 @@ int main(int argc, char const *argv[]){
 
     Person_destory(joe);
     Person_destory(frank);
+
+    // char *name = getname();
+
+    // printf("%s\n", name);
+
+
     
     return 0;
 }
