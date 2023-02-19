@@ -9,6 +9,7 @@
 #define MAX_ROWS 100
 
 
+// 定义 3 个基本类
 struct Address {
     int id;
     int set;
@@ -28,6 +29,7 @@ struct Connection {
 };
 
 
+// 用于处理用户错误操作，但我不知道为什么要写成这样
 void die(const char *message){
     if(errno){
         perror(message);
@@ -40,12 +42,13 @@ void die(const char *message){
 }
 
 
+// struct Address method: 打印 address 的具体内容
 void Address_print(struct Address *addr){
     printf("%d %s %s\n",
         addr->id, addr->name, addr->email);
 }
 
-
+// struct Connection method: 暂时还搞不清楚他的含义
 void Database_load(struct Connection *conn){
     int rc = fread(conn->db, sizeof(struct Database), 1, conn->file);
     if(rc != 1){
@@ -54,6 +57,18 @@ void Database_load(struct Connection *conn){
 }
 
 
+// struct Connection method: 释放db,conn,file占据的内存
+void Database_close(struct Connection *conn)
+{
+    if(conn) {
+        if(conn->file) fclose(conn->file); // close the file
+        if(conn->db) free(conn->db); // free pointer to db
+        free(conn); // free pointer to connection
+    }
+}
+
+
+// Function: 用于打开一个数据库，并返回一个连接
 struct Connection *Database_open(const char *filename, char mode){
     struct Connection *conn = malloc(sizeof(struct Connection));
     if(!conn) die("Memory error");
@@ -77,8 +92,9 @@ struct Connection *Database_open(const char *filename, char mode){
 }
 
 
+// struct Connection method: 
 void Database_write(struct Connection *conn){
-    rewind(conn->file);
+    rewind(conn->file); // stdio 成员函数，作用未知
 
     int rc = fwrite(conn->db, sizeof(struct Database), 1, conn->file);
     if(rc != 1) die("Failed to write database.");
@@ -87,7 +103,7 @@ void Database_write(struct Connection *conn){
     if(rc == -1) die("Cannot flush database.");
 }
 
-
+// struct Connection method: 
 void Database_create(struct Connection *conn){
     int i = 0;
 
@@ -100,20 +116,21 @@ void Database_create(struct Connection *conn){
 }
 
 
+// struct Connection method: 
 void Database_set(struct Connection *conn, int id, const char *name, const char *email){
     struct Address *addr = &conn->db->rows[id];
     if (addr->set) die("Already set, delete it first");
 
     addr->set = 1;
     // WARNING: bug, read the "How to breakit" and fix this
-    char *res = strncpy(addr->name, name, MAX_DATA);
+    char *res = strncpy(addr->name, name, MAX_DATA); // string 标准库中的成员函数，意义未知
     // demonstrate the strncpy bug
     if (!res) die("Name copy failed");
     res = strncpy(addr->email, email, MAX_DATA);
     if (!res) die("Email copy failed");
 }
 
-
+// struct Connection method: 
 void Database_get(struct Connection *conn, int id){
     struct Address *addr = &conn->db->rows[id];
 
@@ -125,13 +142,13 @@ void Database_get(struct Connection *conn, int id){
     }
 }
 
-
+// struct Connection method: 
 void Database_delete(struct Connection *conn, int id){
     struct Address addr = {.id = id, .set = 0};
     conn->db->rows[id] = addr;
 }
 
-
+// struct Connection method: 
 void Database_list(struct Connection *conn){
     int i = 0;
     struct Database *db = conn->db;
@@ -156,7 +173,7 @@ int main(int argc, char const *argv[])
     struct Connection *conn = Database_open(filename, action);
     int id = 0;
 
-    if (argc > 3) id = atoi(argv[3]);
+    if (argc > 3) id = atoi(argv[3]); // 将输入的 id 转化为数字形式。 atoi 是 stdlib 中的函数, 将字符串形式的数字转化为整型，其他一律返回 0.
     if (id >= MAX_ROWS) die("There's not that many records.");
 
     switch (action)
@@ -167,7 +184,7 @@ int main(int argc, char const *argv[])
         break;
     
     case 'g':
-        if (argc != 4) die("Need ad id to get");
+        if (argc != 4) die("Need an id to get");
 
         Databese_get(conn, id);
         break;
