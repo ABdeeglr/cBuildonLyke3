@@ -42,6 +42,7 @@ void die(const char *message){
 }
 
 
+
 // struct Address method: 打印 address 的具体内容
 void Address_print(struct Address *addr){
     printf("%d %s %s\n",
@@ -77,12 +78,12 @@ struct Connection *Database_open(const char *filename, char mode){
     if(!conn->db) die("Memory error");
 
     if(mode == 'c'){
-        conn->file = fopen(filename, 'w');
+        conn->file = fopen(filename, "w");
     }
     else{
-        conn->file = fopen(filename, 'r+');
+        conn->file = fopen(filename, "r+");
         if(conn->file){
-            Databese_load(conn);
+            Database_load(conn);
         }
     }
 
@@ -90,7 +91,6 @@ struct Connection *Database_open(const char *filename, char mode){
 
     return conn;
 }
-
 
 // struct Connection method: 
 void Database_write(struct Connection *conn){
@@ -117,7 +117,9 @@ void Database_create(struct Connection *conn){
 
 
 // struct Connection method: 
-void Database_set(struct Connection *conn, int id, const char *name, const char *email){
+void Database_set(struct Connection *conn,
+                int id, const char *name, 
+                const char *email){
     struct Address *addr = &conn->db->rows[id];
     if (addr->set) die("Already set, delete it first");
 
@@ -164,7 +166,7 @@ void Database_list(struct Connection *conn){
 
 
 
-int main(int argc, char const *argv[])
+int main(int argc, char *argv[])
 {
     if (argc < 3) die("USAGE: ex17 <dbfile> <action> [action params]");
 
@@ -186,7 +188,7 @@ int main(int argc, char const *argv[])
     case 'g':
         if (argc != 4) die("Need an id to get");
 
-        Databese_get(conn, id);
+        Database_get(conn, id);
         break;
 
     case 's':
