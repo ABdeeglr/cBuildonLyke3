@@ -4,3 +4,7 @@
 bin/
 /tests
 tests/
+build/
+/build
+exercises/
+/exercises
