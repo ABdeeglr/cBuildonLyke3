@@ -22,7 +22,7 @@ void die(const char *message) {
 
 
 // a typedef creates a fake type, in this case for a function pointer
-typedef int (*compare_cb)(int a, int b); // 如果这里不这么定义会怎么样？
+typedef int *compare_cb(int a, int b); // 如果这里不这么定义会怎么样？
 
 
 int *bubble_sort(int *numbers, int count, compare_cb cmp) {
@@ -96,7 +96,7 @@ int main(int argc, char * argv[]) {
     }
 
     test_sorting(numbers, count, sorted_order);
-    test_sorting(numbers, count, sorted_order_reverse);
+    test_sorting(numbers, count, sort_order_reverse);
     test_sorting(numbers, count, strange_order);
 
     free(numbers);
